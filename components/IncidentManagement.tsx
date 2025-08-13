@@ -237,7 +237,7 @@ export default function IncidentManagement({
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
               <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Gérer l'incident {selectedIncident.id}
+                Gérer l&apos;incident {selectedIncident.id}
               </h3>
               
               <div className="space-y-4">
@@ -316,7 +316,7 @@ export default function IncidentManagement({
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
               <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Modifier l'incident {selectedIncident.id}
+                Modifier l&apos;incident {selectedIncident.id}
               </h3>
               
               <form onSubmit={handleSaveEdit} className="space-y-4">

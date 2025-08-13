@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid } from 'recharts';
 
 interface Ticket {
@@ -185,10 +186,7 @@ const SuiviPage = () => {
     return utilisateurConnecte && utilisateurConnecte.role === 'administrateur';
   };
 
-  // Vérifier si l'utilisateur est technicien
-  const estTechnicien = () => {
-    return utilisateurConnecte && utilisateurConnecte.role === 'technicien';
-  };
+
 
   // Charger les tickets depuis l'API
   useEffect(() => {
@@ -426,9 +424,11 @@ const SuiviPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="cursor-pointer">
-              <img
+              <Image
                 src="https://static.readdy.ai/image/1b1470ae2e6c51ef9abc425519678c59/ef4fe7e82dbc5a71c70987c5727051b9.png"
                 alt="AMD International Logo"
+                width={48}
+                height={48}
                 className="h-12 w-auto"
               />
             </Link>
@@ -530,7 +530,7 @@ const SuiviPage = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Suivi des Incidents</h1>
-              <p className="text-gray-600 mt-2">Gérez et suivez l'état de tous les incidents signalés</p>
+              <p className="text-gray-600 mt-2">Gérez et suivez l&apos;état de tous les incidents signalés</p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="bg-blue-50 px-4 py-2 rounded-lg">
@@ -788,7 +788,7 @@ const SuiviPage = () => {
                         className="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded whitespace-nowrap cursor-help"
                         title="Seuls les administrateurs peuvent assigner des techniciens"
                       >
-                        En attente d'assignation
+                        En attente d&apos;assignation
                       </span>
                     )}
 
@@ -991,7 +991,7 @@ const SuiviPage = () => {
                       className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors cursor-pointer whitespace-nowrap"
                     >
                       <i className="ri-user-add-line mr-2"></i>
-                      Ajouter l'utilisateur
+                      Ajouter l&apos;utilisateur
                     </button>
                   </div>
                 </div>
@@ -1000,7 +1000,7 @@ const SuiviPage = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Utilisateurs existants</h3>
                   <div className="space-y-3">
-                    {utilisateurs.map((utilisateur, index) => (
+                    {utilisateurs.map((utilisateur) => (
                       <div key={utilisateur.email} className="flex items-center justify-between bg-white rounded-lg border p-4">
                         <div className="flex items-center space-x-4">
                           <div>
@@ -1044,7 +1044,7 @@ const SuiviPage = () => {
             <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-gray-900">Détails de l'Incident</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Détails de l&apos;Incident</h2>
                   <button
                     onClick={fermerModal}
                     className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors cursor-pointer"
@@ -1241,7 +1241,7 @@ const SuiviPage = () => {
             <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-gray-900">Modifier l'incident {ticketModification.id}</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Modifier l&apos;incident {ticketModification.id}</h2>
                   <button
                     onClick={fermerModalModification}
                     className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors cursor-pointer"
@@ -1276,7 +1276,7 @@ const SuiviPage = () => {
                     >
                       <option value="Direction Générale">Direction Générale</option>
                       <option value="Direction Opérationnel">Direction Opérationnel</option>
-                      <option value="Département des Systèmes d'Information, Data et Intelligence Artificiel">Département des Systèmes d'Information, Data et Intelligence Artificiel</option>
+                      <option value="Département des Systèmes d&apos;Information, Data et Intelligence Artificiel">Département des Systèmes d&apos;Information, Data et Intelligence Artificiel</option>
                       <option value="Département Administratif et RH">Département Administratif et RH</option>
                       <option value="Département Commercial">Département Commercial</option>
                       <option value="Pôle Finance Publique">Pôle Finance Publique</option>

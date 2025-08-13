@@ -22,7 +22,6 @@ interface InventoryManagementProps {
 export default function InventoryManagement({
   inventory,
   onAddItem,
-  techniciens,
   onAssignTechnician,
   onUpdateItem
 }: InventoryManagementProps) {
@@ -149,7 +148,7 @@ export default function InventoryManagement({
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-gray-900">
-          Gestion de l'Inventaire ({inventory.length})
+          Gestion de l&apos;Inventaire ({inventory.length})
         </h2>
         <button
           onClick={() => setShowAddForm(true)}
@@ -161,7 +160,7 @@ export default function InventoryManagement({
 
              {!inventory || !Array.isArray(inventory) || inventory.length === 0 ? (
          <div className="text-center py-8">
-           <p className="text-gray-500">Aucun équipement dans l'inventaire</p>
+           <p className="text-gray-500">Aucun équipement dans l&apos;inventaire</p>
          </div>
        ) : (
         <div className="overflow-x-auto">
@@ -254,7 +253,7 @@ export default function InventoryManagement({
               <form onSubmit={handleAddItem} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nom de l'équipement
+                    Nom de l&apos;équipement
                   </label>
                   <input
                     type="text"
@@ -267,7 +266,7 @@ export default function InventoryManagement({
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Type d'équipement
+                    Type d&apos;équipement
                   </label>
                   <select
                     value={newItem.type}
@@ -294,7 +293,7 @@ export default function InventoryManagement({
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    État de l'équipement
+                    État de l&apos;équipement
                   </label>
                   <select
                     value={newItem.condition}
@@ -341,13 +340,13 @@ export default function InventoryManagement({
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
               <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Modifier l'équipement
+                Modifier l&apos;équipement
               </h3>
               
               <form onSubmit={handleUpdateItem} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nom de l'équipement
+                    Nom de l&apos;équipement
                   </label>
                   <input
                     type="text"
@@ -360,7 +359,7 @@ export default function InventoryManagement({
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Type d'équipement
+                    Type d&apos;équipement
                   </label>
                   <select
                     value={editItem.type}
@@ -387,7 +386,7 @@ export default function InventoryManagement({
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Statut de l'équipement
+                    Statut de l&apos;équipement
                   </label>
                   <select
                     value={editItem.status}
@@ -405,7 +404,7 @@ export default function InventoryManagement({
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    État de l'équipement
+                    État de l&apos;équipement
                   </label>
                   <select
                     value={editItem.condition}

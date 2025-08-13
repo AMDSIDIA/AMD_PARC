@@ -396,7 +396,7 @@ const GestionComptesPage = () => {
 
              {/* Gestion des noms d'utilisateurs */}
              <div className="bg-white rounded-lg shadow-sm p-6 border">
-               <h2 className="text-xl font-semibold text-gray-900 mb-4">Gestion des noms d'utilisateurs</h2>
+               <h2 className="text-xl font-semibold text-gray-900 mb-4">Gestion des noms d&apos;utilisateurs</h2>
                
                {/* Ajouter un nom */}
                <div className="mb-6 p-4 bg-gray-50 rounded-lg">

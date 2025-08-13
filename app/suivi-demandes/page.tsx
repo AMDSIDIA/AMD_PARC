@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid } from 'recharts';
 
 interface Ticket {
@@ -488,9 +489,11 @@ const SuiviDemandesPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="cursor-pointer">
-              <img
+              <Image
                 src="https://static.readdy.ai/image/1b1470ae2e6c51ef9abc425519678c59/ef4fe7e82dbc5a71c70987c5727051b9.png"
                 alt="AMD International Logo"
+                width={48}
+                height={48}
                 className="h-12 w-auto"
               />
             </Link>
@@ -540,7 +543,7 @@ const SuiviDemandesPage = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Suivi des Demandes</h1>
-              <p className="text-gray-600 mt-2">Gérez et suivez l'état de toutes les demandes de matériel</p>
+              <p className="text-gray-600 mt-2">Gérez et suivez l&apos;état de toutes les demandes de matériel</p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="bg-orange-50 px-4 py-2 rounded-lg">
@@ -570,7 +573,7 @@ const SuiviDemandesPage = () => {
           <div className="text-center py-12 bg-white rounded-lg border">
             <i className="ri-shield-check-line text-gray-400 text-4xl mb-4"></i>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Accès insuffisant</h3>
-            <p className="text-gray-600">Seuls les administrateurs et chargés d'acquisition peuvent accéder au suivi des demandes.</p>
+            <p className="text-gray-600">Seuls les administrateurs et chargés d&apos;acquisition peuvent accéder au suivi des demandes.</p>
           </div>
         ) : (
           <>
@@ -950,12 +953,12 @@ const SuiviDemandesPage = () => {
                 )}
                 {dateFin && (
                   <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                    Jusqu'au: {new Date(dateFin).toLocaleDateString('fr-FR')}
+                    Jusqu&apos;au: {new Date(dateFin).toLocaleDateString('fr-FR')}
                   </span>
                 )}
                 {recherche && (
                   <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                    Recherche: "{recherche}"
+                    Recherche: &quot;{recherche}&quot;
                   </span>
                 )}
               </div>

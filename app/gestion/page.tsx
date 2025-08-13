@@ -237,7 +237,7 @@ export default function GestionTechnique() {
       console.log('Techniciens chargés:', techniciansData); // Debug
       console.log('Incidents chargés:', incidentsData); // Debug
 
-      setIncidents(incidentsData);
+
       
       // Utiliser les techniciens de l'API ou des techniciens par défaut
       if (techniciansData && techniciansData.length > 0) {
