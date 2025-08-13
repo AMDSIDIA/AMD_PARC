@@ -4,11 +4,18 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const JWT_SECRET = 'amd_support_secret_2024!'; // À changer en production
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ 
+  origin: [
+    'http://localhost:3000',
+    'https://amd-parc.onrender.com',
+    'https://amd-parc-frontend.onrender.com'
+  ],
+  credentials: true
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

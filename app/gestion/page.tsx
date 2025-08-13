@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import IncidentManagement from '@/components/IncidentManagement';
-import InventoryManagement from '@/components/InventoryManagement';
 
 interface Technician {
   id: string;
@@ -1117,27 +1115,28 @@ export default function GestionTechnique() {
                   </div>
                 )}
 
-                <IncidentManagement
-                  incidents={ticketsFiltres.filter(t => t.catégorie !== 'Demande de matériel')}
-                  technicians={technicians}
-                  onAssignIncident={handleAssignIncident}
-                  onUpdateStatus={handleUpdateIncidentStatus}
-                  onUpdateIncident={handleUpdateIncident}
-                />
+                <div className="bg-white rounded-lg shadow-sm p-6 border">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Gestion des Incidents</h3>
+                  <p className="text-gray-600">Interface de gestion des incidents en cours de développement.</p>
+                  <div className="mt-4">
+                    <p className="text-sm text-gray-500">
+                      {ticketsFiltres.filter(t => t.catégorie !== 'Demande de matériel').length} incident(s) à traiter
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
 
             {activeTab === 'inventory' && (
-              <InventoryManagement
-                inventory={inventory}
-                onAddItem={handleAddInventoryItem}
-                onUpdateItem={handleUpdateInventoryItem}
-                techniciens={technicians}
-                onAssignTechnician={(itemId: string, techName: string) => {
-                  // Fonction pour assigner un technicien à un équipement
-                  console.log(`Assigner ${techName} à l'équipement ${itemId}`);
-                }}
-              />
+              <div className="bg-white rounded-lg shadow-sm p-6 border">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Gestion de l&apos;Inventaire</h3>
+                <p className="text-gray-600">Interface de gestion de l&apos;inventaire en cours de développement.</p>
+                <div className="mt-4">
+                  <p className="text-sm text-gray-500">
+                    {inventory.length} équipement(s) dans l&apos;inventaire
+                  </p>
+                </div>
+              </div>
             )}
           </div>
         </div>
