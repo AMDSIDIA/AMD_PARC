@@ -1,0 +1,138 @@
+
+'use client';
+
+import { useState } from 'react';
+
+export default function SignalerProbleme() {
+  const [formData, setFormData] = useState({
+    nom: '', prenom: '', departement: '', 
+    descriptionSouci: '', priorite: ''
+  });
+  const [submitStatus, setSubmitStatus] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/incidents`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Erreur lors de la soumission');
+      }
+
+      setSubmitStatus(`Signalement réussi! Ticket: ${data.ticketId}`);
+      setFormData({
+        nom: '', prenom: '', departement: '', 
+        descriptionSouci: '', priorite: ''
+      });
+    } catch (error) {
+      setSubmitStatus(`Erreur: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Signaler un Problème</h1>
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-1">Nom</label>
+            <input
+              type="text"
+              name="nom"
+              value={formData.nom}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+              required
+            />
+          </div>
+          <div>
+            <label className="block mb-1">Prénom</label>
+            <input
+              type="text"
+              name="prenom"
+              value={formData.prenom}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block mb-1">Département</label>
+          <input
+            type="text"
+            name="departement"
+            value={formData.departement}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1">Description du Problème</label>
+          <textarea
+            name="descriptionSouci"
+            value={formData.descriptionSouci}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+            rows={4}
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1">Priorité</label>
+          <select
+            name="priorite"
+            value={formData.priorite}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded"
+            required
+          >
+            <option value="">Sélectionnez</option>
+            <option value="Haute">Haute</option>
+            <option value="Moyenne">Moyenne</option>
+            <option value="Basse">Basse</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`px-6 py-2 rounded ${
+            isSubmitting ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'
+          } text-white`}
+        >
+          {isSubmitting ? 'Envoi en cours...' : 'Soumettre'}
+        </button>
+        
+        {submitStatus && (
+          <div className={`mt-4 p-3 rounded ${
+            submitStatus.includes('Erreur') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+          }`}>
+            {submitStatus}
+          </div>
+        )}
+      </form>
+    </div>
+  );
+}

@@ -1,0 +1,16 @@
+npx create-next-app@latest frontend
+cd frontend
+# Créer la structure de fichiers fournie
+npm run dev
+
+
+
+    Accès:
+
+    Signalement: http://localhost:3000/signaler
+
+    Suivi: http://localhost:3000/suivi
+
+    Gestion: http://localhost:3000/gestion
+
+Cette solution offre une synchronisation complète entre les différentes parties de l'application tout en conservant les fonctionnalités et le design d'origine. Le backend unique sur le port 5000 sert toutes les données, tandis que le frontend Next.js sur le port 3000 fournit l'interface utilisateur.

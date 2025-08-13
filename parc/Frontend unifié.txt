@@ -1,0 +1,12 @@
+frontend/
+├── pages/
+│   ├── signaler/
+│   │   └── page.tsx
+│   ├── suivi/
+│   │   └── page.tsx
+│   └── gestion/
+│       └── page.tsx
+├── components/
+│   ├── IncidentManagement.tsx
+│   └── InventoryManagement.tsx
+└── .env.local

@@ -1,0 +1,7 @@
+
+mkdir backend
+cd backend
+npm init -y
+npm install express cors body-parser jsonwebtoken
+# Créer server.js avec le contenu fourni
+node server.js
