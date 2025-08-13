@@ -6,16 +6,6 @@ import Image from 'next/image';
 import IncidentManagement from '@/components/IncidentManagement';
 import InventoryManagement from '@/components/InventoryManagement';
 
-interface Incident {
-  ticketId: string;
-  descriptionSouci: string;
-  prenom: string;
-  nom: string;
-  priorite: string;
-  status: string;
-  assignedTo: string;
-}
-
 interface Technician {
   id: string;
   name: string;
@@ -31,7 +21,6 @@ interface InventoryItem {
 }
 
 export default function GestionTechnique() {
-  const [incidents] = useState<Incident[]>([]);
   const [technicians, setTechnicians] = useState<Technician[]>([]);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
