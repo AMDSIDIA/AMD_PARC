@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/tickets');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com'}/api/tickets`);
         if (!response.ok) throw new Error('Erreur de chargement des tickets');
         const data = await response.json();
         setTickets(data);

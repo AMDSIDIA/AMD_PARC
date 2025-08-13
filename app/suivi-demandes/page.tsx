@@ -58,7 +58,7 @@ const SuiviDemandesPage = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const API_BASE_URL = 'http://localhost:5000';
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com';
         const response = await fetch(`${API_BASE_URL}/api/tickets`);
         
         if (!response.ok) {
@@ -227,7 +227,7 @@ const SuiviDemandesPage = () => {
   // Fonctions d'action sur les tickets
   const approuverDemande = async (ticketId: string) => {
     try {
-      const API_BASE_URL = 'http://localhost:5000';
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com';
       const response = await fetch(`${API_BASE_URL}/api/tickets/${ticketId}`, {
         method: 'PATCH',
         headers: {
@@ -281,7 +281,7 @@ const SuiviDemandesPage = () => {
   const rejeterDemande = async (ticketId: string) => {
     if (confirm('Êtes-vous sûr de vouloir rejeter cette demande ?')) {
       try {
-        const API_BASE_URL = 'http://localhost:5000';
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com';
         const response = await fetch(`${API_BASE_URL}/api/tickets/${ticketId}`, {
           method: 'PATCH',
           headers: {

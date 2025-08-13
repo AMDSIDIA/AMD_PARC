@@ -1,0 +1,30 @@
+services:
+  # Service Backend
+  - type: web
+    name: amd-parc-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    plan: free
+
+  # Service Frontend
+  - type: web
+    name: amd-parc-frontend
+    env: node
+    rootDir: .
+    buildCommand: npm install && npm run build
+    startCommand: npx serve@latest out --listen $PORT
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10001
+      - key: NEXT_PUBLIC_API_URL
+        value: https://amd-parc-backend.onrender.com
+    plan: free

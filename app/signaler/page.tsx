@@ -154,7 +154,7 @@ export default function SignalerProbleme() {
       console.error('Erreur lors de la soumission:', error);
       
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        setSubmitStatus('Erreur de connexion au serveur. Veuillez vérifier que le backend est démarré sur http://localhost:5000');
+        setSubmitStatus('Erreur de connexion au serveur. Veuillez vérifier que le backend est accessible.');
       } else {
         setSubmitStatus(`Erreur lors de la soumission: ${error instanceof Error ? error.message : 'Erreur inconnue. Veuillez réessayer.'}`);
       }

@@ -41,12 +41,12 @@ export default function GestionTechnique() {
   const [dateFin, setDateFin] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
-  const API_BASE_URL = 'http://localhost:5000';
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com';
 
   // Fonction utilitaire pour recharger les tickets
   const reloadTickets = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tickets');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com'}/api/tickets`);
       if (response.ok) {
         const data = await response.json();
         const ticketsWithTechnician = data.map((ticket: any) => ({
@@ -274,7 +274,7 @@ export default function GestionTechnique() {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/tickets');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com'}/api/tickets`);
         if (!response.ok) throw new Error('Erreur de chargement des tickets');
         const data = await response.json();
         console.log('Tickets chargés:', data); // Debug
@@ -581,7 +581,7 @@ export default function GestionTechnique() {
                 <li>Naviguez vers le dossier backend : <code className="bg-gray-100 px-1 rounded">cd backend</code></li>
                 <li>Installez les dépendances : <code className="bg-gray-100 px-1 rounded">npm install</code></li>
                 <li>Démarrez le serveur : <code className="bg-gray-100 px-1 rounded">npm start</code></li>
-                <li>Vérifiez que le serveur est accessible sur <code className="bg-gray-100 px-1 rounded">http://localhost:5000</code></li>
+                <li>Vérifiez que le serveur backend est accessible</li>
                 <li>Rechargez cette page</li>
               </ol>
             </div>

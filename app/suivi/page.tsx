@@ -91,7 +91,7 @@ const SuiviPage = () => {
   useEffect(() => {
     const fetchTechnicians = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/technicians');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com'}/api/technicians`);
         if (!response.ok) throw new Error('Erreur de chargement des techniciens');
         const data = await response.json();
         setTechniciens(data);
@@ -105,7 +105,7 @@ const SuiviPage = () => {
   // Fonction de connexion
   const seConnecter = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+              const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com'}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailConnexion, motDePasse: motDePasseConnexion })
@@ -192,7 +192,7 @@ const SuiviPage = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const API_BASE_URL = 'http://localhost:5000';
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com';
         const response = await fetch(`${API_BASE_URL}/api/tickets`);
         
         if (!response.ok) {

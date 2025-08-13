@@ -111,7 +111,7 @@ const DemandeMaterielPage = () => {
     setIsSubmitting(true);
 
     try {
-      const API_BASE_URL = 'http://localhost:5000';
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com';
       
       // Créer un ticket de demande de matériel
       const nomFinal = formData.nomPrenoms === 'Autre (à préciser)' ? autreNom : formData.nomPrenoms;
@@ -169,7 +169,7 @@ const DemandeMaterielPage = () => {
       console.error('Erreur:', error);
       
       if (error instanceof TypeError && (error as Error).message.includes('fetch')) {
-        alert('Erreur de connexion au serveur. Veuillez vérifier que le backend est démarré sur http://localhost:5000');
+        alert('Erreur de connexion au serveur. Veuillez vérifier que le backend est accessible.');
       } else {
         alert(`Erreur lors de l'enregistrement de votre demande: ${(error as Error).message}`);
       }
