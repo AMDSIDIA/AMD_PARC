@@ -5,12 +5,14 @@ services:
     env: node
     rootDir: backend
     buildCommand: npm install
-    startCommand: npm start
+    startCommand: npm run db:migrate && npm run db:seed && npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
+      - key: JWT_SECRET
+        value: amd_support_secret_2024_production!
     plan: free
 
   # Service Frontend
@@ -27,4 +29,11 @@ services:
         value: 10001
       - key: NEXT_PUBLIC_API_URL
         value: https://amd-parc-backend.onrender.com
+    plan: free
+
+databases:
+  # Base de données PostgreSQL
+  - name: amd-parc-db
+    databaseName: amd_parc_db
+    user: amd_parc_user
     plan: free

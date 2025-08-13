@@ -2,10 +2,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
+// Import des modèles
+const User = require('./models/User');
+const Incident = require('./models/Incident');
+const Inventory = require('./models/Inventory');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const JWT_SECRET = 'amd_support_secret_2024!'; // À changer en production
+const JWT_SECRET = process.env.JWT_SECRET || 'amd_support_secret_2024!';
 
 // Middleware
 app.use(cors({ 
@@ -19,54 +25,37 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Base de données en mémoire
-let incidents = [];
-let nextTicketId = 1001;
-
-let technicians = [
-  { id: 'tech1', name: 'Pascal OUOBA', email: 'pascal.ouoba@amd.com' },
-  { id: 'tech2', name: 'Mohamed DENE', email: 'mohamed.dene@amd.com' },
-  { id: 'tech3', name: 'Dalila GOUBA', email: 'dalila.gouba@amd.com' },
-];
-
-let admins = [
-  { id: 'admin1', name: 'Pascal OUOBA', email: 'pascalouoba5@gmail.com', password: 'admin1234', role: 'administrateur' }
-];
-
-let inventory = [
-  { id: 'inv001', name: 'Dell XPS 15', type: 'Ordinateur Portable', status: 'Disponible', condition: 'Nouveau', assignedTo: null },
-  { id: 'inv002', name: 'HP EliteBook', type: 'Ordinateur Portable', status: 'Disponible', condition: 'Ancien', assignedTo: null },
-];
-
 // ===== AUTHENTIFICATION =====
-app.post('/api/auth/login', (req, res) => {
-  const { email, password, motDePasse } = req.body;
-  const pwd = password || motDePasse;
-  // Vérifier admin
-  const admin = admins.find(a => a.email === email && a.password === pwd);
-  if (admin) {
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password, motDePasse } = req.body;
+    const pwd = password || motDePasse;
+    
+    // Rechercher l'utilisateur par email
+    const user = await User.findByEmail(email);
+    
+    if (!user) {
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+    }
+    
+    // Vérifier le mot de passe pour les administrateurs
+    if (user.role === 'administrateur' && user.password !== pwd) {
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+    }
+    
     const utilisateur = {
-      id: admin.id,
-      email: admin.email,
-      name: admin.name,
-      role: admin.role
+      id: user.user_id,
+      email: user.email,
+      name: user.name,
+      role: user.role
     };
+    
     const token = jwt.sign(utilisateur, JWT_SECRET, { expiresIn: '8h' });
-    return res.json({ token, utilisateur });
+    res.json({ token, utilisateur });
+  } catch (error) {
+    console.error('Erreur de connexion:', error);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
   }
-  // Sinon, technicien (pas de mot de passe pour la démo)
-  const user = technicians.find(t => t.email === email);
-  if (!user) {
-    return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
-  }
-  const utilisateur = {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: 'technicien'
-  };
-  const token = jwt.sign(utilisateur, JWT_SECRET, { expiresIn: '8h' });
-  res.json({ token, utilisateur });
 });
 
 // Middleware d'authentification
@@ -88,189 +77,188 @@ const authenticate = (req, res, next) => {
 };
 
 // ===== ROUTES INCIDENTS =====
-app.post('/api/incidents', (req, res) => {
-  const { nom, prenom, departement, poste, descriptionSouci } = req.body;
-  const errors = {};
-  
-  // Validation basique
-  if (!nom) errors.nom = 'Le nom est obligatoire';
-  if (!prenom) errors.prenom = 'Le prénom est obligatoire';
-  if (!departement) errors.departement = 'Le département est obligatoire';
-  if (!poste) errors.poste = 'Le poste est obligatoire';
-  if (!descriptionSouci) errors.descriptionSouci = 'La description est obligatoire';
-  
-  if (Object.keys(errors).length > 0) {
-    return res.status(400).json({ errors });
+app.post('/api/incidents', async (req, res) => {
+  try {
+    const { nom, prenom, departement, poste, descriptionSouci } = req.body;
+    const errors = {};
+    
+    // Validation basique
+    if (!nom) errors.nom = 'Le nom est obligatoire';
+    if (!prenom) errors.prenom = 'Le prénom est obligatoire';
+    if (!departement) errors.departement = 'Le département est obligatoire';
+    if (!poste) errors.poste = 'Le poste est obligatoire';
+    if (!descriptionSouci) errors.descriptionSouci = 'La description est obligatoire';
+    
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ errors });
+    }
+    
+    // Générer le prochain ID de ticket
+    const ticketId = await Incident.getNextTicketId();
+    
+    // Créer l'incident
+    const incident = await Incident.create({
+      ticket_id: ticketId,
+      nom,
+      prenom,
+      departement,
+      poste,
+      description_souci: descriptionSouci,
+      categorie: 'Incident technique',
+      priorite: 'Moyenne'
+    });
+    
+    res.status(201).json({
+      message: 'Incident créé avec succès',
+      ticket: {
+        id: incident.ticket_id,
+        nom: incident.nom,
+        prenom: incident.prenom,
+        departement: incident.departement,
+        poste: incident.poste,
+        description: incident.description_souci,
+        etat: incident.etat,
+        priorite: incident.priorite,
+        created_at: incident.created_at
+      }
+    });
+  } catch (error) {
+    console.error('Erreur création incident:', error);
+    res.status(500).json({ message: 'Erreur lors de la création de l\'incident' });
   }
-  
-  const newIncident = {
-    ticketId: `AMD-${nextTicketId++}`,
-    timestamp: new Date().toISOString(),
-    status: 'Nouveau',
-    assignedTo: null,
-    ...req.body
-  };
-  
-  incidents.push(newIncident);
-  res.status(201).json({ 
-    message: 'Incident créé avec succès', 
-    ticketId: newIncident.ticketId 
-  });
 });
 
-app.get('/api/incidents', (req, res) => {
-  res.json(incidents);
-});
-
-app.patch('/api/incidents/:ticketId/assign', authenticate, (req, res) => {
-  const { ticketId } = req.params;
-  const { technicianId } = req.body;
-  
-  const incident = incidents.find(i => i.ticketId === ticketId);
-  if (!incident) return res.status(404).json({ message: 'Incident non trouvé' });
-  
-  const technician = technicians.find(t => t.id === technicianId);
-  if (!technician) return res.status(404).json({ message: 'Technicien non trouvé' });
-  
-  incident.assignedTo = technician.name;
-  incident.status = 'Assigné';
-  
-  res.json({ 
-    message: `Incident assigné à ${technician.name}`,
-    incident 
-  });
-});
-
-app.patch('/api/incidents/:ticketId/status', authenticate, (req, res) => {
-  const { ticketId } = req.params;
-  const { status } = req.body;
-  
-  const incident = incidents.find(i => i.ticketId === ticketId);
-  if (!incident) return res.status(404).json({ message: 'Incident non trouvé' });
-  
-  incident.status = status;
-  res.json({ 
-    message: `Statut mis à jour: ${status}`,
-    incident 
-  });
-});
-
-// ===== ROUTES INVENTAIRE =====
-app.get('/api/inventory', (req, res) => {
-  res.json(inventory);
-});
-
-app.post('/api/inventory', authenticate, (req, res) => {
-  const { name, type, condition } = req.body;
-  
-  if (!name || !type || !condition) {
-    return res.status(400).json({ message: 'Tous les champs sont obligatoires' });
+app.get('/api/incidents', authenticate, async (req, res) => {
+  try {
+    const incidents = await Incident.getAll();
+    res.json(incidents);
+  } catch (error) {
+    console.error('Erreur récupération incidents:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des incidents' });
   }
-  
-  const newItem = {
-    id: `INV-${Date.now()}`,
-    name,
-    type,
-    condition,
-    status: 'Disponible',
-    assignedTo: null,
-    addedDate: new Date().toISOString()
-  };
-  
-  inventory.push(newItem);
-  res.status(201).json(newItem);
+});
+
+app.patch('/api/incidents/:ticketId/assign', authenticate, async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+    const { technicianId } = req.body;
+    
+    const updatedIncident = await Incident.assignToTechnician(ticketId, technicianId);
+    
+    if (!updatedIncident) {
+      return res.status(404).json({ message: 'Incident non trouvé' });
+    }
+    
+    res.json(updatedIncident);
+  } catch (error) {
+    console.error('Erreur attribution incident:', error);
+    res.status(500).json({ message: 'Erreur lors de l\'attribution de l\'incident' });
+  }
+});
+
+app.patch('/api/incidents/:ticketId/status', authenticate, async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+    const { status } = req.body;
+    
+    const updatedIncident = await Incident.updateStatus(ticketId, status);
+    
+    if (!updatedIncident) {
+      return res.status(404).json({ message: 'Incident non trouvé' });
+    }
+    
+    res.json(updatedIncident);
+  } catch (error) {
+    console.error('Erreur mise à jour statut:', error);
+    res.status(500).json({ message: 'Erreur lors de la mise à jour du statut' });
+  }
+});
+
+// ===== ROUTES TICKETS =====
+app.get('/api/tickets', async (req, res) => {
+  try {
+    const tickets = await Incident.getTicketsForTracking();
+    res.json(tickets);
+  } catch (error) {
+    console.error('Erreur récupération tickets:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des tickets' });
+  }
 });
 
 // ===== ROUTES TECHNICIENS =====
-app.get('/api/technicians', (req, res) => {
-  res.json(technicians);
-});
-
-// Route spéciale pour la page de suivi
-app.get('/api/tickets', (req, res) => {
-  const tickets = incidents.map(i => ({
-    id: i.ticketId,
-    nomPrenom: `${i.prenom} ${i.nom}`,
-    departement: i.departement,
-    poste: i.poste,
-    typeMatériel: i.typeMateriel,
-    description: i.descriptionSouci,
-    priorité: i.priorite,
-    état: i.status,
-    technicienAssigné: i.assignedTo,
-    dateCreation: i.timestamp,
-    catégorie: i.catégorie || 'Matériel'
-  }));
-  
-  res.json(tickets);
-});
-
-// Route pour créer des tickets (utilisée par le formulaire de demande de matériel)
-app.post('/api/tickets', (req, res) => {
-  const { nomPrenom, departement, poste, typeMatériel, description, priorité, état, catégorie } = req.body;
-  const errors = {};
-  
-  // Validation basique
-  if (!nomPrenom) errors.nomPrenom = 'Le nom et prénom sont obligatoires';
-  if (!departement) errors.departement = 'Le département est obligatoire';
-  if (!poste) errors.poste = 'Le poste est obligatoire';
-  if (!typeMatériel) errors.typeMatériel = 'Le type de matériel est obligatoire';
-  if (!description) errors.description = 'La description est obligatoire';
-  
-  if (Object.keys(errors).length > 0) {
-    return res.status(400).json({ errors });
+app.get('/api/technicians', async (req, res) => {
+  try {
+    const technicians = await User.getAllTechnicians();
+    res.json(technicians);
+  } catch (error) {
+    console.error('Erreur récupération techniciens:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des techniciens' });
   }
-  
-  // Séparer nom et prénom
-  const [prenom, ...nomParts] = nomPrenom.split(' ');
-  const nom = nomParts.join(' ');
-  
-  const newTicket = {
-    ticketId: `TK-${new Date().getFullYear()}-${String(nextTicketId++).padStart(3, '0')}`,
-    timestamp: new Date().toISOString(),
-    status: état || 'Nouveau',
-    assignedTo: null,
-    nom,
-    prenom,
-    departement,
-    poste,
-    typeMateriel: typeMatériel,
-    descriptionSouci: description,
-    priorite: priorité || 'Moyenne',
-    catégorie: catégorie || 'Matériel'
-  };
-  
-  incidents.push(newTicket);
-  
-  res.status(201).json({ 
-    message: 'Ticket créé avec succès', 
-    ticketId: newTicket.ticketId,
-    ticket: {
-      id: newTicket.ticketId,
-      nomPrenom: `${newTicket.prenom} ${newTicket.nom}`,
-      departement: newTicket.departement,
-      poste: newTicket.poste,
-      typeMatériel: newTicket.typeMateriel,
-      description: newTicket.descriptionSouci,
-      priorité: newTicket.priorite,
-      état: newTicket.status,
-      technicienAssigné: newTicket.assignedTo,
-      dateCreation: newTicket.timestamp,
-      catégorie: newTicket.catégorie
+});
+
+// ===== ROUTES INVENTAIRE =====
+app.get('/api/inventory', async (req, res) => {
+  try {
+    const inventory = await Inventory.getAll();
+    res.json(inventory);
+  } catch (error) {
+    console.error('Erreur récupération inventaire:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération de l\'inventaire' });
+  }
+});
+
+app.post('/api/inventory', authenticate, async (req, res) => {
+  try {
+    const { name, type, status, condition } = req.body;
+    
+    // Générer l'ID de l'item
+    const itemId = await Inventory.getNextItemId();
+    
+    const item = await Inventory.create({
+      item_id: itemId,
+      name,
+      type,
+      status: status || 'Disponible',
+      condition: condition || 'Bon'
+    });
+    
+    res.status(201).json(item);
+  } catch (error) {
+    console.error('Erreur création item:', error);
+    res.status(500).json({ message: 'Erreur lors de la création de l\'item' });
+  }
+});
+
+app.patch('/api/inventory/:itemId', authenticate, async (req, res) => {
+  try {
+    const { itemId } = req.params;
+    const updateData = req.body;
+    
+    const updatedItem = await Inventory.update(itemId, updateData);
+    
+    if (!updatedItem) {
+      return res.status(404).json({ message: 'Item non trouvé' });
     }
+    
+    res.json(updatedItem);
+  } catch (error) {
+    console.error('Erreur mise à jour item:', error);
+    res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'item' });
+  }
+});
+
+// ===== ROUTE DE SANTÉ =====
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Serveur AMD Parc Informatique opérationnel',
+    timestamp: new Date().toISOString()
   });
 });
 
-
-
-// Démarrer le serveur
+// Démarrage du serveur
 app.listen(PORT, () => {
-  console.log(`Backend démarré sur http://localhost:${PORT}`);
-  console.log('Routes disponibles:');
-  console.log(`- POST   /api/incidents`);
-  console.log(`- GET    /api/incidents`);
-  console.log(`- PATCH  /api/incidents/:ticketId/assign`);
-  console.log(`- GET    /api/tickets (pour le suivi)`);
-  console.log(`- POST   /api/tickets (création de tickets)`);
-  console.log(`- POST   /api/auth/login`);
+  console.log(`🚀 Serveur démarré sur le port ${PORT}`);
+  console.log(`📊 Environnement: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 URL: http://localhost:${PORT}`);
 }); 
