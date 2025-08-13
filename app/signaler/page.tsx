@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function SignalerProbleme() {
   const [formData, setFormData] = useState({
@@ -170,9 +171,11 @@ export default function SignalerProbleme() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <Link href="/" className="cursor-pointer">
-                <img 
+                <Image 
                   src="https://static.readdy.ai/image/1b1470ae2e6c51ef9abc425519678c59/ef4fe7e82dbc5a71c70987c5727051b9.png" 
                   alt="AMD International Logo" 
+                  width={48}
+                  height={48}
                   className="h-12 w-auto"
                 />
               </Link>

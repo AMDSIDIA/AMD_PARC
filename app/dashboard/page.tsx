@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid, LineChart, Line } from 'recharts';
 
 function formatDateInput(date: Date) {
@@ -24,7 +25,7 @@ export default function Dashboard() {
         if (!response.ok) throw new Error('Erreur de chargement des tickets');
         const data = await response.json();
         setTickets(data);
-      } catch (e) {
+      } catch {
         setTickets([]);
       } finally {
         setLoadingTickets(false);
@@ -100,9 +101,11 @@ export default function Dashboard() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <Link href="/" className="cursor-pointer">
-                <img 
+                <Image 
                   src="https://static.readdy.ai/image/1b1470ae2e6c51ef9abc425519678c59/ef4fe7e82dbc5a71c70987c5727051b9.png" 
                   alt="AMD International Logo" 
+                  width={48}
+                  height={48}
                   className="h-12 w-auto"
                 />
               </Link>
@@ -126,7 +129,7 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-4">Tableau de bord</h1>
-              <p className="text-gray-600">Vue d'ensemble des statistiques du parc informatique</p>
+              <p className="text-gray-600">Vue d&apos;ensemble des statistiques du parc informatique</p>
             </div>
             {/* Filtres de date */}
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">

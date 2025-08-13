@@ -94,7 +94,7 @@ const SuiviPage = () => {
         if (!response.ok) throw new Error('Erreur de chargement des techniciens');
         const data = await response.json();
         setTechniciens(data);
-      } catch (e) {
+      } catch {
         setTechniciens([]);
       }
     };
@@ -126,8 +126,8 @@ const SuiviPage = () => {
       } else {
         alert('Réponse inattendue du serveur.');
       }
-    } catch (error) {
-      alert('Erreur de connexion au serveur.');
+          } catch {
+        alert('Erreur de connexion au serveur.');
     }
   };
 

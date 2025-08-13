@@ -2,6 +2,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
@@ -15,7 +16,7 @@ export default function Home() {
         if (!response.ok) throw new Error('Erreur de chargement des tickets');
         const data = await response.json();
         setTickets(data);
-      } catch (e) {
+      } catch {
         setTickets([]);
       } finally {
         setLoadingTickets(false);
@@ -38,9 +39,11 @@ export default function Home() {
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <img 
+              <Image 
                 src="https://static.readdy.ai/image/1b1470ae2e6c51ef9abc425519678c59/ef4fe7e82dbc5a71c70987c5727051b9.png" 
                 alt="AMD International Logo" 
+                width={48}
+                height={48}
                 className="h-12 w-auto"
               />
               <span className="ml-4 text-lg font-semibold text-gray-800">
@@ -139,7 +142,7 @@ export default function Home() {
                 Demande de Matériel
               </h4>
               <p className="text-gray-600 mb-6">
-                Formulez vos demandes d'acquisition de matériel informatique avec un formulaire dédié.
+                Formulez vos demandes d&apos;acquisition de matériel informatique avec un formulaire dédié.
               </p>
               <Link href="/demande-materiel" className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap">
                 Faire une demande
@@ -154,7 +157,7 @@ export default function Home() {
                 Suivi des Demandes
               </h4>
               <p className="text-gray-600 mb-6">
-                Consultez l'état d'avancement de vos tickets et recevez des mises à jour en temps réel.
+                Consultez l&apos;état d&apos;avancement de vos tickets et recevez des mises à jour en temps réel.
               </p>
               <Link href="/suivi" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors cursor-pointer whitespace-nowrap">
                 Voir mes tickets
@@ -235,7 +238,7 @@ export default function Home() {
                 </li>
                 <li className="flex items-center text-gray-700">
                   <i className="ri-lock-line text-blue-600 mr-3"></i>
-                  Problème d'accès/mot de passe
+                  Problème d&apos;accès/mot de passe
                 </li>
                 <li className="flex items-center text-gray-700">
                   <i className="ri-bug-line text-blue-600 mr-3"></i>

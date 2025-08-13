@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import IncidentManagement from '@/components/IncidentManagement';
 import InventoryManagement from '@/components/InventoryManagement';
 
@@ -30,7 +31,7 @@ interface InventoryItem {
 }
 
 export default function GestionTechnique() {
-  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [incidents] = useState<Incident[]>([]);
   const [technicians, setTechnicians] = useState<Technician[]>([]);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -688,9 +689,11 @@ export default function GestionTechnique() {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
               <Link href="/" className="cursor-pointer">
-                <img 
+                <Image 
                   src="https://static.readdy.ai/image/1b1470ae2e6c51ef9abc425519678c59/ef4fe7e82dbc5a71c70987c5727051b9.png" 
                   alt="AMD International Logo" 
+                  width={48}
+                  height={48}
                   className="h-12 w-auto"
                 />
               </Link>
@@ -796,7 +799,7 @@ export default function GestionTechnique() {
                 Gestion Technique
               </h1>
               <p className="text-gray-600">
-                Gestion des incidents et de l'inventaire technique
+                Gestion des incidents et de l&apos;inventaire technique
               </p>
             </div>
 
@@ -966,7 +969,7 @@ export default function GestionTechnique() {
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  Gestion de l'Inventaire
+                  Gestion de l&apos;Inventaire
                 </button>
               </nav>
             </div>
@@ -1107,7 +1110,7 @@ export default function GestionTechnique() {
                             )}
                             {dateFin && (
                               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                                Jusqu'au: {new Date(dateFin).toLocaleDateString()}
+                                Jusqu&apos;au: {new Date(dateFin).toLocaleDateString()}
                               </span>
                             )}
                           </div>

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 
 interface DemandeMateriel {
   nomPrenoms: string;
@@ -133,7 +135,7 @@ const DemandeMaterielPage = () => {
       });
 
       if (response.ok) {
-        const result = await response.json();
+        await response.json();
         alert('Votre demande de matériel a été enregistrée avec succès !');
         setFormData({
           nomPrenoms: '',
@@ -198,9 +200,11 @@ const DemandeMaterielPage = () => {
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <img 
+              <Image 
                 src="https://static.readdy.ai/image/1b1470ae2e6c51ef9abc425519678c59/ef4fe7e82dbc5a71c70987c5727051b9.png" 
                 alt="AMD International Logo" 
+                width={48}
+                height={48}
                 className="h-12 w-auto"
               />
               <span className="ml-4 text-lg font-semibold text-gray-800">
@@ -208,9 +212,9 @@ const DemandeMaterielPage = () => {
               </span>
             </div>
             <nav className="flex space-x-6">
-              <a href="/" className="text-gray-700 hover:text-orange-600 font-medium transition-colors cursor-pointer">
+              <Link href="/" className="text-gray-700 hover:text-orange-600 font-medium transition-colors cursor-pointer">
                 Accueil
-              </a>
+              </Link>
               <a href="/signaler" className="text-gray-700 hover:text-orange-600 font-medium transition-colors cursor-pointer">
                 Signaler un problème
               </a>
@@ -234,7 +238,7 @@ const DemandeMaterielPage = () => {
               Demande de Matériel
             </h1>
             <p className="text-gray-600">
-              Formulaire de demande d'acquisition de matériel informatique
+              Formulaire de demande d&apos;acquisition de matériel informatique
             </p>
             <div className="mt-4 p-4 bg-orange-50 rounded-lg">
               <p className="text-sm text-orange-800">
