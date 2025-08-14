@@ -337,7 +337,7 @@ const SuiviDemandesPage = () => {
   const changerStatut = async (ticketId: string, nouveauStatut: string) => {
     try {
       // Essayer d'abord l'API backend
-      const API_BASE_URL = 'http://localhost:5000';
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com';
       const response = await fetch(`${API_BASE_URL}/api/tickets/${ticketId}`, {
         method: 'PATCH',
         headers: {
