@@ -10,7 +10,7 @@ const Incident = require('./models/Incident');
 const Inventory = require('./models/Inventory');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 const JWT_SECRET = process.env.JWT_SECRET || 'amd_support_secret_2024!';
 
 // Middleware
@@ -260,5 +260,5 @@ app.get('/api/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Serveur démarré sur le port ${PORT}`);
   console.log(`📊 Environnement: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 URL: http://localhost:${PORT}`);
+  console.log(`🔗 URL: ${process.env.NODE_ENV === 'production' ? 'https://amd-parc-backend.onrender.com' : `http://localhost:${PORT}`}`);
 }); 

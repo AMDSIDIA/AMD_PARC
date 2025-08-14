@@ -1,0 +1,169 @@
+# Configuration Blueprint pour AMD Parc Informatique
+# Documentation: https://docs.blueprint.com
+
+version: "1.0"
+name: "amd-parc-informatique"
+description: "Système de gestion du parc informatique AMD International"
+
+# Configuration des services
+services:
+  # Service Backend
+  backend:
+    type: "node"
+    name: "amd-parc-backend"
+    source:
+      type: "git"
+      repository: "${GIT_REPOSITORY}"
+      branch: "main"
+      path: "backend"
+    build:
+      command: "npm install"
+      output: "."
+    run:
+      command: "npm start"
+      port: 10000
+    environment:
+      NODE_ENV: "production"
+      PORT: 10000
+      JWT_SECRET: "${JWT_SECRET}"
+      DATABASE_URL: "${DATABASE_URL}"
+    resources:
+      cpu: "0.5"
+      memory: "512Mi"
+    scaling:
+      min: 1
+      max: 3
+    health:
+      path: "/api/health"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Service Frontend
+  frontend:
+    type: "node"
+    name: "amd-parc-frontend"
+    source:
+      type: "git"
+      repository: "${GIT_REPOSITORY}"
+      branch: "main"
+      path: "."
+    build:
+      command: "npm install && npm run build"
+      output: "out"
+    run:
+      command: "npx serve@latest out --listen $PORT"
+      port: 3000
+    environment:
+      NODE_ENV: "production"
+      NEXT_PUBLIC_API_URL: "https://${backend.domain}"
+    resources:
+      cpu: "0.25"
+      memory: "256Mi"
+    scaling:
+      min: 1
+      max: 2
+    health:
+      path: "/"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Configuration de la base de données
+databases:
+  postgres:
+    type: "postgresql"
+    name: "amd-parc-db"
+    version: "15"
+    resources:
+      cpu: "0.5"
+      memory: "1Gi"
+      storage: "10Gi"
+    environment:
+      POSTGRES_DB: "parcdb_gkw5"
+      POSTGRES_USER: "parcdb_gkw5_user"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+
+# Configuration du réseau
+network:
+  domains:
+    - name: "amd-parc.blueprint.com"
+      service: "frontend"
+    - name: "api.amd-parc.blueprint.com"
+      service: "backend"
+
+# Configuration des variables d'environnement
+variables:
+  GIT_REPOSITORY:
+    description: "URL du repository Git"
+    required: true
+  JWT_SECRET:
+    description: "Clé secrète JWT"
+    required: true
+    secret: true
+  DB_PASSWORD:
+    description: "Mot de passe de la base de données"
+    required: true
+    secret: true
+
+# Configuration des volumes persistants
+volumes:
+  postgres_data:
+    size: "10Gi"
+    mount_path: "/var/lib/postgresql/data"
+
+# Configuration des secrets
+secrets:
+  jwt_secret:
+    description: "Clé secrète JWT pour l'authentification"
+  db_password:
+    description: "Mot de passe de la base de données PostgreSQL"
+
+# Configuration du monitoring
+monitoring:
+  enabled: true
+  metrics:
+    - cpu_usage
+    - memory_usage
+    - disk_usage
+    - network_io
+  alerts:
+    - name: "high_cpu"
+      condition: "cpu_usage > 80%"
+      duration: "5m"
+    - name: "high_memory"
+      condition: "memory_usage > 85%"
+      duration: "5m"
+
+# Configuration des backups
+backups:
+  postgres:
+    schedule: "0 2 * * *"  # Tous les jours à 2h du matin
+    retention: "30d"
+    compression: true
+
+# Configuration de la sécurité
+security:
+  ssl:
+    enabled: true
+    provider: "letsencrypt"
+  cors:
+    allowed_origins:
+      - "https://amd-parc.blueprint.com"
+      - "https://api.amd-parc.blueprint.com"
+      - "http://localhost:3000"
+  headers:
+    - "X-Frame-Options: DENY"
+    - "X-Content-Type-Options: nosniff"
+    - "X-XSS-Protection: 1; mode=block"
+
+# Configuration du déploiement
+deployment:
+  strategy: "rolling"
+  health_check:
+    enabled: true
+    grace_period: "30s"
+  rollback:
+    enabled: true
+    automatic: true
+    threshold: "5%"

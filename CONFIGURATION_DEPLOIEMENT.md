@@ -12,9 +12,10 @@
 
 ### Base de Données
 - **Type** : PostgreSQL
-- **Host** : dpg-d2efvus9c44c738uqqag-a
-- **Nom** : ParcDB
+- **Host** : dpg-d2efvus9c44c738uqqag-a.oregon-postgres.render.com
+- **Nom** : parcdb_gkw5
 - **Plateforme** : Render (PostgreSQL)
+- **SSL** : Requis (require: true, rejectUnauthorized: false)
 
 ## Configuration des Variables d'Environnement
 
@@ -31,7 +32,7 @@ NEXT_PUBLIC_API_URL=https://amd-parc-backend.onrender.com
 ```env
 NODE_ENV=production
 PORT=10000
-DATABASE_URL=postgresql://[user]:[password]@dpg-d2efvus9c44c738uqqag-a/ParcDB
+DATABASE_URL=postgresql://parcdb_gkw5_user:pUPYo0OFAt57tmGdVpCLHw7j81iyzrL9@dpg-d2efvus9c44c738uqqag-a.oregon-postgres.render.com/parcdb_gkw5
 JWT_SECRET=amd_support_secret_2024!
 ```
 
@@ -51,8 +52,11 @@ Le backend est configuré pour accepter les requêtes depuis :
 4. **SSL** : Configuration SSL pour la production
 
 ### 🔧 Corrections Appliquées
-1. **app/suivi-demandes/page.tsx** : URL API mise à jour pour utiliser la variable d'environnement
-2. **app/signaler/page.tsx** : Déjà configuré pour utiliser la variable d'environnement
+1. **backend/server.js** : Port par défaut changé de 5000 à 10000
+2. **backend/config/database.js** : Configuration SSL mise à jour pour Render
+3. **app/suivi-demandes/page.tsx** : URL API mise à jour pour utiliser la variable d'environnement
+4. **app/signaler/page.tsx** : URL API mise à jour pour utiliser la variable d'environnement
+5. **app/config/api.ts** : Configuration centralisée de l'API créée
 
 ## Test de Connexion
 

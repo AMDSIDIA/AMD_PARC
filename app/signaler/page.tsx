@@ -111,7 +111,7 @@ export default function SignalerProbleme() {
     }
 
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://amd-parc-backend.onrender.com';
       
       const nomFinal = formData.nomPrenoms === 'Autre (à préciser)' ? autreNom : formData.nomPrenoms;
       const response = await fetch(`${API_BASE_URL}/api/tickets`, {
